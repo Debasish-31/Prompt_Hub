@@ -1,0 +1,45 @@
+<% layout('layout') -%>
+
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <h1>Welcome, <%= user.username %>!</h1>
+    <a href="/create" class="btn">Create New Prompt</a>
+</div>
+
+<h2>Your Prompts</h2>
+
+<% if (prompts.length === 0) { %>
+    <div class="card">
+        <p>You haven't created any prompts yet. <a href="/create">Create your first prompt!</a></p>
+    </div>
+<% } else { %>
+    <% prompts.forEach(prompt => { %>
+        <div class="card">
+            <div style="display: flex; justify-content: space-between; align-items: start;">
+                <div style="flex: 1;">
+                    <h3><a href="/prompt/<%= prompt._id %>" style="text-decoration: none; color: #333;"><%= prompt.title %></a></h3>
+                    <div class="prompt-meta">
+                        <%= prompt.category %> | 
+                        <%= prompt.isPublic ? 'Public' : 'Private' %> | 
+                        <%= prompt.createdAt.toLocaleDateString() %>
+                        <% if (prompt.updatedAt > prompt.createdAt) { %>
+                            (Updated: <%= prompt.updatedAt.toLocaleDateString() %>)
+                        <% } %>
+                    </div>
+                    <p><%= prompt.content.substring(0, 200) %>...</p>
+                    <div>
+                        <% prompt.tags.forEach(tag => { %>
+                            <span class="tag">#<%= tag %></span>
+                        <% }) %>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 0.5rem;">
+                    <a href="/edit/<%= prompt._id %>" class="btn">Edit</a>
+                    <form method="POST" action="/prompt/<%= prompt._id %>?_method=DELETE" style="display: inline;" 
+                          onsubmit="return confirm('Are you sure you want to delete this prompt?')">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    <% }) %>
+<% } %>

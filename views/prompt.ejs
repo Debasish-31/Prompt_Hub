@@ -1,0 +1,38 @@
+<% layout('layout') -%>
+
+<div class="card">
+    <h1><%= prompt.title %></h1>
+    <div class="prompt-meta">
+        By <%= prompt.author.username %> | 
+        <%= prompt.category %> | 
+        <%= prompt.createdAt.toLocaleDateString() %>
+        <% if (prompt.updatedAt > prompt.createdAt) { %>
+            (Updated: <%= prompt.updatedAt.toLocaleDateString() %>)
+        <% } %>
+    </div>
+    
+    <div style="margin: 2rem 0;">
+        <h3>Prompt:</h3>
+        <div style="background: #f8f9fa; padding: 1rem; border-radius: 4px; white-space: pre-wrap;"><%= prompt.content %></div>
+    </div>
+    
+    <% if (prompt.tags.length > 0) { %>
+        <div style="margin: 1rem 0;">
+            <strong>Tags:</strong>
+            <% prompt.tags.forEach(tag => { %>
+                <span class="tag">#<%= tag %></span>
+            <% }) %>
+        </div>
+    <% } %>
+    
+    <div style="margin-top: 2rem;">
+        <a href="/" class="btn" style="background: #6c757d;">Back to Home</a>
+        <% if (typeof user !== 'undefined' && user && prompt.author._id.toString() === user._id.toString()) { %>
+            <a href="/edit/<%= prompt._id %>" class="btn">Edit</a>
+            <form method="POST" action="/prompt/<%= prompt._id %>?_method=DELETE" style="display: inline;" 
+                  onsubmit="return confirm('Are you sure you want to delete this prompt?')">
+                <button type="submit" class="btn btn-danger">Delete</button>
+            </form>
+        <% } %>
+    </div>
+</div>

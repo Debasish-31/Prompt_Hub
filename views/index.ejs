@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prompt Hub - Latest Public Prompts</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f4f4f4;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            background: #333;
+            color: white;
+            padding: 1rem 0;
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .nav-links {
+            list-style: none;
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            background-color: #555;
+        }
+        
+        main {
+            margin: 2rem 0;
+        }
+        
+        .card {
+            background: white;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .btn {
+            display: inline-block;
+            background: #007bff;
+            color: white;
+            padding: 0.5rem 1rem;
+            text-decoration: none;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            margin: 0.25rem;
+        }
+        
+        .btn:hover {
+            background: #0056b3;
+        }
+        
+        .tag {
+            display: inline-block;
+            background: #e9ecef;
+            color: #495057;
+            padding: 0.25rem 0.5rem;
+            margin: 0.25rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+        }
+        
+        .prompt-meta {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">
+                    <a href="/" style="color: white; text-decoration: none;">Prompt Hub</a>
+                </div>
+                <ul class="nav-links">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/search">Search</a></li>
+                    <% if (typeof user !== 'undefined' && user) { %>
+                        <li><a href="/dashboard">Dashboard</a></li>
+                        <li><a href="/create">Create Prompt</a></li>
+                        <li><a href="/logout">Logout</a></li>
+                    <% } else { %>
+                        <li><a href="/login">Login</a></li>
+                        <li><a href="/register">Register</a></li>
+                    <% } %>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <h1>Latest Public Prompts</h1>
+
+            <% if (prompts.length === 0) { %>
+                <div class="card">
+                    <p>No prompts available. 
+                        <% if (typeof user !== 'undefined' && user) { %>
+                            <a href="/create">Create the first one!</a>
+                        <% } else { %>
+                            <a href="/register">Register</a> to create the first one!
+                        <% } %>
+                    </p>
+                </div>
+            <% } else { %>
+                <% prompts.forEach(prompt => { %>
+                    <div class="card">
+                        <h3><a href="/prompt/<%= prompt._id %>" style="text-decoration: none; color: #333;"><%= prompt.title %></a></h3>
+                        <div class="prompt-meta">
+                            By <%= prompt.author.username %> | <%= prompt.category %> | <%= prompt.createdAt.toLocaleDateString() %>
+                        </div>
+                        <p><%= prompt.content.substring(0, 200) %><%= prompt.content.length > 200 ? '...' : '' %></p>
+                        <% if (prompt.tags && prompt.tags.length > 0) { %>
+                            <div>
+                                <% prompt.tags.forEach(tag => { %>
+                                    <span class="tag">#<%= tag %></span>
+                                <% }) %>
+                            </div>
+                        <% } %>
+                        <a href="/prompt/<%= prompt._id %>" class="btn" style="margin-top: 1rem;">Read More</a>
+                    </div>
+                <% }) %>
+            <% } %>
+        </div>
+    </main>
+</body>
+</html>

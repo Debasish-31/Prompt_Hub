@@ -1,0 +1,51 @@
+<% layout('layout') -%>
+
+<h1>Edit Prompt</h1>
+
+<div class="card">
+    <% if (error) { %>
+        <div class="error"><%= error %></div>
+    <% } %>
+    
+    <form method="POST" action="/edit/<%= prompt._id %>?_method=PUT">
+        <div class="form-group">
+            <label for="title">Title:</label>
+            <input type="text" id="title" name="title" value="<%= prompt.title %>" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="category">Category:</label>
+            <select id="category" name="category" required>
+                <option value="">Select a category</option>
+                <option value="Writing" <%= prompt.category === 'Writing' ? 'selected' : '' %>>Writing</option>
+                <option value="Coding" <%= prompt.category === 'Coding' ? 'selected' : '' %>>Coding</option>
+                <option value="Creative" <%= prompt.category === 'Creative' ? 'selected' : '' %>>Creative</option>
+                <option value="Business" <%= prompt.category === 'Business' ? 'selected' : '' %>>Business</option>
+                <option value="Education" <%= prompt.category === 'Education' ? 'selected' : '' %>>Education</option>
+                <option value="Marketing" <%= prompt.category === 'Marketing' ? 'selected' : '' %>>Marketing</option>
+                <option value="Other" <%= prompt.category === 'Other' ? 'selected' : '' %>>Other</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="content">Prompt Content:</label>
+            <textarea id="content" name="content" required><%= prompt.content %></textarea>
+        </div>
+        
+        <div class="form-group">
+            <label for="tags">Tags (comma-separated):</label>
+            <input type="text" id="tags" name="tags" value="<%= prompt.tags.join(', ') %>">
+        </div>
+        
+        <div class="form-group">
+            <label>
+                <input type="checkbox" name="isPublic" <%= prompt.isPublic ? 'checked' : '' %>> Make this prompt public
+            </label>
+        </div>
+        
+        <div style="display: flex; gap: 1rem;">
+            <button type="submit" class="btn">Update Prompt</button>
+            <a href="/dashboard" class="btn" style="background: #6c757d;">Cancel</a>
+        </div>
+    </form>
+</div>
